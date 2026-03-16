@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TILT V1 — Full Platform</title>
+<title>TILT V2 — LI Only</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <style>
@@ -166,10 +166,6 @@ tr:hover td{background:#f8fafc}
 .approval-actions{display:flex;gap:8px;align-items:center;margin-top:14px;flex-wrap:wrap}
 .approval-actions textarea{flex:1;min-width:200px;padding:8px 12px;border:1px solid var(--border);border-radius:6px;font-family:inherit;font-size:12px;resize:none;height:36px}
 .ie-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-.user-avatar-cell{display:flex;align-items:center;gap:10px}
-.user-avatar-cell .ua-small{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0}
-.user-avatar-cell .ua-name{font-weight:600;font-size:13px}
-.user-avatar-cell .ua-email{font-size:11px;color:var(--text-light)}
 .type-badge{padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
 .type-sso{background:#dbeafe;color:#1d4ed8}
 .type-ext{background:#fef3c7;color:#92400e}
@@ -245,16 +241,14 @@ tr:hover td{background:#f8fafc}
 
 <nav class="sidebar" id="sidebar">
 <div class="sidebar-header">
-<div class="logo">TILT <span class="badge">V1.0</span></div>
+<div class="logo">TILT <span class="badge">V2.0</span></div>
 </div>
 <div class="sidebar-nav">
 <div class="nav-item active" data-screen="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</div>
 <div class="nav-item" data-screen="sku-browser"><i class="fas fa-barcode"></i> SKU Browser</div>
-<div class="nav-item" data-screen="aw-editor"><i class="fas fa-palette"></i> AW Editor</div>
 <div class="nav-item" data-screen="li-editor"><i class="fas fa-tags"></i> LI Editor</div>
-<div class="nav-item" data-screen="approval-queue"><i class="fas fa-clipboard-check"></i> Approval Queue <span class="nav-badge">5</span></div>
+<div class="nav-item" data-screen="approval-queue"><i class="fas fa-clipboard-check"></i> Approval Queue <span class="nav-badge">3</span></div>
 <div class="nav-item" data-screen="import-export"><i class="fas fa-exchange-alt"></i> Import / Export</div>
-<div class="nav-item" data-screen="user-mgmt"><i class="fas fa-users-cog"></i> User Management</div>
 <div class="nav-item" data-screen="audit-trail"><i class="fas fa-history"></i> Audit Trail</div>
 <div class="nav-item" data-screen="workflow"><i class="fas fa-project-diagram"></i> Workflow</div>
 </div>
@@ -325,9 +319,9 @@ tr:hover td{background:#f8fafc}
 <tbody>
 <tr><td>LI-2026-0847</td><td>JP</td><td>Dior</td><td>C099600070</td><td><span class="badge status-completed">Completed</span></td><td>Tanaka Yuki</td><td>2026-03-15</td></tr>
 <tr><td>LI-2026-0846</td><td>KR</td><td>Givenchy</td><td>P056120100</td><td><span class="badge status-pending">Pending</span></td><td>Kim Soo-jin</td><td>2026-03-15</td></tr>
-<tr><td>AW-2026-0312</td><td>TW</td><td>Benefit</td><td>BN38201</td><td><span class="badge status-validated">Validated</span></td><td>Crystal Yao</td><td>2026-03-14</td></tr>
-<tr><td>LI-2026-0845</td><td>TH</td><td>Guerlain</td><td>G042510</td><td><span class="badge status-rejected">Rejected</span></td><td>Siriporn W.</td><td>2026-03-14</td></tr>
-<tr><td>LI-2026-0844</td><td>VN</td><td>Fresh</td><td>FR80120</td><td><span class="badge status-draft">Draft</span></td><td>Nguyen M.</td><td>2026-03-13</td></tr>
+<tr><td>LI-2026-0845</td><td>TW</td><td>Benefit</td><td>BN38201</td><td><span class="badge status-validated">Validated</span></td><td>Crystal Yao</td><td>2026-03-14</td></tr>
+<tr><td>LI-2026-0844</td><td>TH</td><td>Guerlain</td><td>G042510</td><td><span class="badge status-rejected">Rejected</span></td><td>Siriporn W.</td><td>2026-03-14</td></tr>
+<tr><td>LI-2026-0843</td><td>VN</td><td>Fresh</td><td>FR80120</td><td><span class="badge status-draft">Draft</span></td><td>Nguyen M.</td><td>2026-03-13</td></tr>
 </tbody>
 </table>
 </div>
@@ -374,86 +368,6 @@ tr:hover td{background:#f8fafc}
 <div class="page-btn"><i class="fas fa-chevron-right" style="font-size:10px"></i></div>
 </div>
 </div>
-</div>
-</div>
-
-<!-- AW EDITOR -->
-<div class="screen" id="screen-aw-editor">
-<h2 style="margin-bottom:20px;font-size:22px">AW Editor</h2>
-<div class="flow-bar">
-<div class="flow-step done"><div class="flow-dot"><i class="fas fa-check" style="font-size:10px"></i></div> Drafted</div>
-<div class="flow-line done"></div>
-<div class="flow-step done"><div class="flow-dot"><i class="fas fa-check" style="font-size:10px"></i></div> Colour Valid.*</div>
-<div class="flow-line done"></div>
-<div class="flow-step active"><div class="flow-dot"><i class="fas fa-circle" style="font-size:6px"></i></div> AW Valid. (RA)</div>
-<div class="flow-line"></div>
-<div class="flow-step pending"><div class="flow-dot">4</div> AW Valid. (Brand)</div>
-<div class="flow-line"></div>
-<div class="flow-step pending"><div class="flow-dot">5</div> Position Valid.</div>
-<div class="flow-line"></div>
-<div class="flow-step pending"><div class="flow-dot">6</div> Completed</div>
-</div>
-<div class="editor-wrap">
-<div class="editor-form">
-<div class="editor-section">
-<div class="section-title"><span class="step-num">1</span> Record Info</div>
-<div class="form-group"><label>Record #</label><input readonly value="AW-2026-0312"></div>
-<div class="form-group"><label>Country</label><select><option>Japan</option><option>Korea</option><option>Taiwan</option><option>Thailand</option><option>Hong Kong</option></select></div>
-<div class="form-group"><label>Market</label><select><option>JP</option><option>KR</option><option>TW</option><option>TH</option><option>HK</option><option>SG-MY</option><option>VN</option><option>ID</option><option>PH</option></select></div>
-<div class="form-group"><label>Brand</label><select><option>Dior</option><option>Givenchy</option><option>Fenty Beauty</option><option>Benefit</option><option>Fresh</option><option>Guerlain</option><option>Make Up For Ever</option></select></div>
-<div class="form-group"><label>SKU #</label><input value="C099600070"></div>
-<div class="form-group"><label>Description</label><input value="Capture Totale Super Potent Serum 50ml"></div>
-<div class="form-group"><label>OCD Date</label><input type="date" value="2026-04-15"></div>
-<div class="form-group"><label>Usage Code</label><input value="SK-CARE-SRM"></div>
-<div class="form-group"><label>Control Point</label><select><option>Ingredients</option><option>Claims</option><option>Warnings</option><option>Usage</option><option>Fragrance</option></select></div>
-</div>
-<div class="editor-section">
-<div class="section-title"><span class="step-num">2</span> Label Colour</div>
-<div class="form-group"><label>Label Colour</label><div class="color-row"><input type="text" value="#FFFFFF"><div class="color-swatch" style="background:#FFFFFF"></div></div></div>
-<div class="form-group"><label>Font Colour</label><div class="color-row"><input type="text" value="#1E293B"><div class="color-swatch" style="background:#1E293B"></div></div></div>
-<p style="font-size:11px;color:var(--text-light);margin-top:4px"><i class="fas fa-info-circle"></i> Requires colour validation before proceeding</p>
-</div>
-<div class="editor-section">
-<div class="section-title"><span class="step-num">3</span> Artwork</div>
-<div class="form-group"><label>Label AW ID</label><input value="AW-JP-DC-2026-0070"></div>
-<div class="form-group"><label>AW Image</label>
-<div class="upload-zone"><i class="fas fa-cloud-upload-alt"></i><p>Drop AW file here or click to browse</p></div>
-</div>
-<div class="form-group"><label>Ingredient Listing Version</label><input value="ING-V3.2"></div>
-<div class="form-group"><label>Label Size</label><input value="45mm x 80mm"></div>
-</div>
-</div>
-<div>
-<div class="card preview-card">
-<div class="preview-tabs">
-<div class="preview-tab active" onclick="switchPreviewTab(this)">Preview</div>
-<div class="preview-tab" onclick="switchPreviewTab(this)">Annotations</div>
-<div class="preview-tab" onclick="switchPreviewTab(this)">History</div>
-</div>
-<div class="preview-body">
-<div class="bottle-mock">
-<div class="bottle-cap"></div>
-<div class="bottle-label">
-<div class="bl-brand">DIOR</div>
-<div class="bl-name">Capture Totale</div>
-<div class="bl-divider"></div>
-<div class="bl-info">Super Potent Serum<br>50ml / 1.7 fl.oz</div>
-</div>
-<div class="annotation ann-brand">BRAND</div>
-<div class="annotation ann-colour">COLOUR</div>
-<div class="annotation ann-position">POSITION</div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="editor-actions">
-<button class="btn btn-ghost"><i class="fas fa-arrow-left"></i> Back</button>
-<button class="btn btn-ghost">Save Draft</button>
-<span class="spacer"></span>
-<button class="btn btn-danger btn-sm">Delete</button>
-<button class="btn btn-secondary">Submit for Review</button>
-<button class="btn btn-primary">Complete &amp; Approve <i class="fas fa-arrow-right"></i></button>
 </div>
 </div>
 
@@ -529,67 +443,9 @@ tr:hover td{background:#f8fafc}
 <div class="screen" id="screen-approval-queue">
 <h2 style="margin-bottom:20px;font-size:22px">Approval Queue</h2>
 <div class="approval-tabs">
-<div class="approval-tab active" onclick="switchApprovalTab(this)">Pending My Approval (5)</div>
+<div class="approval-tab active" onclick="switchApprovalTab(this)">Pending My Approval (3)</div>
 <div class="approval-tab" onclick="switchApprovalTab(this)">My Requests (12)</div>
 <div class="approval-tab" onclick="switchApprovalTab(this)">All Approvals</div>
-</div>
-
-<div class="approval-card" onclick="toggleApproval(this)">
-<div class="approval-card-header">
-<span class="priority-dot priority-high"></span>
-<span class="acq-brand">DIOR</span>
-<span class="acq-sku">C099600070</span>
-<span class="acq-desc">Capture Totale Serum — Colour validation overdue</span>
-<span class="badge status-rejected acq-stage">Colour Validation</span>
-<span class="acq-time">3 days ago</span>
-<i class="fas fa-chevron-down chevron"></i>
-</div>
-<div class="approval-card-body">
-<div class="acb-grid">
-<div class="acb-item"><div class="acb-label">Record #</div><div class="acb-val">AW-2026-0312</div></div>
-<div class="acb-item"><div class="acb-label">Control Point</div><div class="acb-val">Ingredients</div></div>
-<div class="acb-item"><div class="acb-label">Ingredient Ver.</div><div class="acb-val">ING-V3.2</div></div>
-<div class="acb-item"><div class="acb-label">Submitted By</div><div class="acb-val">Tanaka Yuki</div></div>
-</div>
-<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
-<div style="width:80px;height:80px;background:linear-gradient(135deg,#2d2d2d,#1a1a1a);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:10px">AW Preview</div>
-<div style="display:flex;gap:6px"><div class="color-swatch" style="background:#FFFFFF"></div><div class="color-swatch" style="background:#1E293B"></div></div>
-</div>
-<div class="approval-actions">
-<textarea placeholder="Add a comment..."></textarea>
-<button class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
-<button class="btn btn-reject btn-sm"><i class="fas fa-times"></i> Reject</button>
-<button class="btn btn-ghost btn-sm">Reassign</button>
-<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();goScreen('aw-editor')">View Details</button>
-</div>
-</div>
-</div>
-
-<div class="approval-card" onclick="toggleApproval(this)">
-<div class="approval-card-header">
-<span class="priority-dot priority-medium"></span>
-<span class="acq-brand">GIVENCHY</span>
-<span class="acq-sku">P056120100</span>
-<span class="acq-desc">Prisme Libre Powder — Brand sign-off needed</span>
-<span class="badge status-pending acq-stage">AW Brand Valid.</span>
-<span class="acq-time">1 day ago</span>
-<i class="fas fa-chevron-down chevron"></i>
-</div>
-<div class="approval-card-body">
-<div class="acb-grid">
-<div class="acb-item"><div class="acb-label">Record #</div><div class="acb-val">AW-2026-0315</div></div>
-<div class="acb-item"><div class="acb-label">Control Point</div><div class="acb-val">Claims</div></div>
-<div class="acb-item"><div class="acb-label">Ingredient Ver.</div><div class="acb-val">ING-V2.1</div></div>
-<div class="acb-item"><div class="acb-label">Submitted By</div><div class="acb-val">Kim Soo-jin</div></div>
-</div>
-<div class="approval-actions">
-<textarea placeholder="Add a comment..."></textarea>
-<button class="btn btn-success btn-sm"><i class="fas fa-check"></i> Approve</button>
-<button class="btn btn-reject btn-sm"><i class="fas fa-times"></i> Reject</button>
-<button class="btn btn-ghost btn-sm">Reassign</button>
-<button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();goScreen('aw-editor')">View Details</button>
-</div>
-</div>
 </div>
 
 <div class="approval-card" onclick="toggleApproval(this)">
@@ -713,49 +569,6 @@ tr:hover td{background:#f8fafc}
 </div>
 </div>
 
-<!-- USER MANAGEMENT -->
-<div class="screen" id="screen-user-mgmt">
-<h2 style="margin-bottom:20px;font-size:22px">User Management</h2>
-<div style="display:flex;gap:12px;margin-bottom:16px;flex-wrap:wrap">
-<div class="search-bar"><i class="fas fa-search"></i><input placeholder="Search users..."></div>
-<select style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px"><option>All Roles</option><option>Admin</option><option>RA Lead</option><option>Brand Coordinator</option><option>Market User</option><option>Viewer</option></select>
-<select style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-family:inherit;font-size:13px"><option>All Types</option><option>LVMH SSO</option><option>External</option></select>
-</div>
-<div class="card">
-<div class="card-body" style="padding:0;overflow-x:auto">
-<table>
-<thead><tr><th>User</th><th>Type</th><th>Role(s)</th><th>Team</th><th>Market(s)</th><th>Language</th><th>Status</th><th>Actions</th></tr></thead>
-<tbody>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:var(--gold);color:var(--navy)">CY</div><div><div class="ua-name">Crystal Yao</div><div class="ua-email">c.yao@lvmh.com</div></div></div></td><td><span class="type-badge type-sso">LVMH SSO</span></td><td>Admin</td><td>APAC RA</td><td>All</td><td>EN, TW</td><td><span class="status-dot status-active-dot"></span>Active</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button></td></tr>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:#dbeafe;color:#1d4ed8">KS</div><div><div class="ua-name">Kim Soo-jin</div><div class="ua-email">s.kim@lvmh.com</div></div></div></td><td><span class="type-badge type-sso">LVMH SSO</span></td><td>Brand Coordinator</td><td>P&amp;C Korea</td><td>KR</td><td>KR, EN</td><td><span class="status-dot status-active-dot"></span>Active</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button></td></tr>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:#dcfce7;color:#16a34a">TY</div><div><div class="ua-name">Tanaka Yuki</div><div class="ua-email">y.tanaka@lvmh.com</div></div></div></td><td><span class="type-badge type-sso">LVMH SSO</span></td><td>RA Lead</td><td>P&amp;C Japan</td><td>JP</td><td>JP, EN</td><td><span class="status-dot status-active-dot"></span>Active</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button></td></tr>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:#fef3c7;color:#92400e">SW</div><div><div class="ua-name">Siriporn W.</div><div class="ua-email">s.wongchai@lvmh.com</div></div></div></td><td><span class="type-badge type-sso">LVMH SSO</span></td><td>Market User</td><td>P&amp;C Thailand</td><td>TH</td><td>TH, EN</td><td><span class="status-dot status-active-dot"></span>Active</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button></td></tr>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:#fee2e2;color:#dc2626">VN</div><div><div class="ua-name">vendor_vn_01</div><div class="ua-email">vendor01@printco.vn</div></div></div></td><td><span class="type-badge type-ext">External</span></td><td>Viewer</td><td>Vendor — PrintCo VN</td><td>VN</td><td>VN</td><td><span class="status-dot status-active-dot"></span>Active</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-ghost"><i class="fas fa-ban"></i></button></td></tr>
-<tr><td><div class="user-avatar-cell"><div class="ua-small" style="background:#f1f5f9;color:#94a3b8">LP</div><div><div class="ua-name">label_printer_id</div><div class="ua-email">printer@labelworks.id</div></div></div></td><td><span class="type-badge type-ext">External</span></td><td>Viewer</td><td>Vendor — LabelWorks ID</td><td>ID</td><td>ID</td><td><span class="status-dot status-inactive-dot"></span>Disabled</td><td><button class="btn btn-sm btn-ghost"><i class="fas fa-edit"></i></button> <button class="btn btn-sm btn-ghost"><i class="fas fa-undo"></i></button></td></tr>
-</tbody>
-</table>
-</div>
-</div>
-<div class="card" style="margin-top:20px">
-<div class="card-header">User Rights Matrix</div>
-<div class="card-body" style="padding:0;overflow-x:auto">
-<table class="matrix-table">
-<thead><tr><th>Permission</th><th>Admin</th><th>RA Lead</th><th>Brand Coord.</th><th>Market User</th><th>Viewer</th></tr></thead>
-<tbody>
-<tr><td>Create Instructions</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>Edit Own Instructions</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>Approve / Reject</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>Colour Validation</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>Import / Export</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>User Management</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>View Audit Trail</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
-<tr><td>SharePoint Sync</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-
 <!-- AUDIT TRAIL -->
 <div class="screen" id="screen-audit-trail">
 <h2 style="margin-bottom:20px;font-size:22px">Audit Trail</h2>
@@ -795,17 +608,11 @@ tr:hover td{background:#f8fafc}
 <div class="screen" id="screen-workflow">
 <h2 style="margin-bottom:20px;font-size:22px">Workflow</h2>
 <div class="workflow-section">
-<h3>V1 — Full Platform (AW + LI)</h3>
+<h3>V2 — LI Only</h3>
 <div class="workflow-flow">
 <div class="wf-box wf-done">Drafted<div class="wf-team">All Users</div></div>
 <div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="wf-box wf-done">Colour Validation*<div class="wf-team">RA Lead</div></div>
-<div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="wf-box wf-active">AW Validation (RA)<div class="wf-team">RA Lead</div></div>
-<div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="wf-box wf-pending">AW Validation (Brand)<div class="wf-team">Brand Coord.</div></div>
-<div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
-<div class="wf-box wf-pending">Position Validation<div class="wf-team">Market User</div></div>
+<div class="wf-box wf-active">Position Validation<div class="wf-team">Market User</div></div>
 <div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
 <div class="wf-box wf-pending">LI Validation<div class="wf-team">RA Lead</div></div>
 <div class="wf-arrow"><i class="fas fa-arrow-right"></i></div>
@@ -826,9 +633,7 @@ tr:hover td{background:#f8fafc}
 <tr><td>Create Instructions</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
 <tr><td>Edit Own Instructions</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td></tr>
 <tr><td>Approve / Reject</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>Colour Validation</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
 <tr><td>Import / Export</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
-<tr><td>User Management</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
 <tr><td>View Audit Trail</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td></tr>
 <tr><td>SharePoint Sync</td><td class="matrix-check">&#10003;</td><td class="matrix-check">&#10003;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td><td class="matrix-dash">&mdash;</td></tr>
 </tbody>
@@ -843,8 +648,6 @@ tr:hover td{background:#f8fafc}
 <div class="notif-panel" id="notif-panel">
 <div class="notif-header"><h3>Notifications</h3><button class="notif-close" onclick="toggleNotif()"><i class="fas fa-times"></i></button></div>
 <div class="notif-list">
-<div class="notif-item"><div class="ni-title">Approval Required</div><div class="ni-text">Dior C099600070 — Colour Validation overdue (3 days)</div><div class="ni-time">3 days ago</div></div>
-<div class="notif-item"><div class="ni-title">New Submission</div><div class="ni-text">Kim Soo-jin submitted Givenchy P056120100 for AW Brand Validation</div><div class="ni-time">1 day ago</div></div>
 <div class="notif-item"><div class="ni-title">Import Complete</div><div class="ni-text">Batch BATCH-0045: 47 SKUs imported for SG-MY market</div><div class="ni-time">2 days ago</div></div>
 <div class="notif-item"><div class="ni-title">Rejection Notice</div><div class="ni-text">Guerlain G042510 rejected by Crystal Yao — incorrect TH warnings</div><div class="ni-time">2 days ago</div></div>
 <div class="notif-item"><div class="ni-title">SharePoint Sync</div><div class="ni-text">Weekly export synced successfully to SharePoint</div><div class="ni-time">5 days ago</div></div>
@@ -955,7 +758,7 @@ function checkPassword(){
 }
 document.getElementById('gate-pw').addEventListener('keydown',function(e){if(e.key==='Enter')checkPassword();});
 
-var currentVersion='v1';
+var currentVersion='v2';
 function initApp(){updateLIFlow();}
 
 function goScreen(id){
@@ -973,7 +776,7 @@ document.querySelectorAll('.nav-item').forEach(function(item){
 function updateLIFlow(){
   var fb=document.getElementById('li-flow-bar');
   if(!fb) return;
-  fb.innerHTML='<div class="flow-step done"><div class="flow-dot"><i class="fas fa-check" style="font-size:10px"></i></div> ...AW Validated</div><div class="flow-line done"></div><div class="flow-step active"><div class="flow-dot"><i class="fas fa-circle" style="font-size:6px"></i></div> Position Valid.</div><div class="flow-line"></div><div class="flow-step pending"><div class="flow-dot">3</div> LI Validation</div><div class="flow-line"></div><div class="flow-step pending"><div class="flow-dot">4</div> Completed</div>';
+  fb.innerHTML='<div class="flow-step done"><div class="flow-dot"><i class="fas fa-check" style="font-size:10px"></i></div> Drafted</div><div class="flow-line done"></div><div class="flow-step active"><div class="flow-dot"><i class="fas fa-circle" style="font-size:6px"></i></div> Position Valid.</div><div class="flow-line"></div><div class="flow-step pending"><div class="flow-dot">3</div> LI Validation</div><div class="flow-line"></div><div class="flow-step pending"><div class="flow-dot">4</div> Completed</div>';
 }
 
 function toggleSidebar(){document.getElementById('sidebar').classList.toggle('open');}
@@ -1040,5 +843,3 @@ function switchPreviewTab(tab){var p=tab.parentElement;p.querySelectorAll('.prev
 function switchApprovalTab(tab){document.querySelectorAll('.approval-tab').forEach(function(t){t.classList.remove('active');});tab.classList.add('active');}
 function selectFormat(el){el.parentElement.querySelectorAll('.format-opt').forEach(function(o){o.classList.remove('selected');});el.classList.add('selected');}
 </script>
-</body>
-</html>
