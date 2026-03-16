@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TILT - APAC Market Labelling Instruction Tool</title>
+  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+  <div id="app">
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+      <div class="login-container">
+        <div class="login-left">
+          <div class="login-brand">
+            <div class="logo">TILT</div>
+            <p class="tagline">APAC Market Labelling Instruction Tool</p>
+            <p class="subtitle">Streamlining product labelling across APAC markets with visual communication and systematic approval workflows.</p>
+          </div>
+          <div class="login-features">
+            <div class="feature-item">
+              <i class="fas fa-globe-asia"></i>
+              <span>Multi-market support: JP, KR, TW, HK, TH, SEA</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-check-double"></i>
+              <span>Systematic approval workflows</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-language"></i>
+              <span>Full multi-language support</span>
+            </div>
+            <div class="feature-item">
+              <i class="fas fa-barcode"></i>
+              <span>Barcode scanning & SKU lookup</span>
+            </div>
+          </div>
+        </div>
+        <div class="login-right">
+          <div class="login-form-container">
+            <h2>Sign In</h2>
+            <div class="login-tabs">
+              <button class="login-tab active" data-tab="sso">LVMH SSO</button>
+              <button class="login-tab" data-tab="local">External User</button>
+            </div>
+            <div id="sso-form" class="login-form active">
+              <p class="sso-desc">Sign in with your LVMH corporate account via Okta.</p>
+              <button class="btn btn-primary btn-full" onclick="handleSSOLogin()">
+                <i class="fas fa-sign-in-alt"></i> Sign in with Okta SSO
+              </button>
+            </div>
+            <div id="local-form" class="login-form">
+              <div class="form-group">
+                <label>Username</label>
+                <input type="text" id="login-username" placeholder="Enter your username" value="ext_user">
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="login-password" placeholder="Enter your password" value="password">
+              </div>
+              <button class="btn btn-primary btn-full" onclick="handleLocalLogin()">
+                <i class="fas fa-sign-in-alt"></i> Sign In
+              </button>
+              <p class="password-policy">Password expires every 30 days. Min 8 chars, uppercase, lowercase, number, special character required.</p>
+            </div>
+            <div class="login-footer">
+              <select id="login-language" onchange="changeLanguage(this.value)">
+                <option value="en">English</option>
+                <option value="ja">日本語</option>
+                <option value="ko">한국어</option>
+                <option value="zh-tw">繁體中文</option>
+                <option value="th">ไทย</option>
+                <option value="vi">Tiếng Việt</option>
+                <option value="id">Bahasa Indonesia</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="main-app" class="page">
+      <!-- Sidebar -->
+      <nav id="sidebar">
+        <div class="sidebar-header">
+          <div class="logo-small">TILT</div>
+          <span class="version">v2.0</span>
+        </div>
+        <ul class="nav-menu">
+          <li class="nav-item active" data-page="dashboard">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+          </li>
+          <li class="nav-item" data-page="instructions">
+            <i class="fas fa-tags"></i>
+            <span>Labelling Instructions</span>
+          </li>
+          <li class="nav-item" data-page="sku-search">
+            <i class="fas fa-search"></i>
+            <span>SKU Search</span>
+          </li>
+          <li class="nav-item" data-page="approvals">
+            <i class="fas fa-clipboard-check"></i>
+            <span>Approvals</span>
+            <span class="badge" id="approval-badge">5</span>
+          </li>
+          <li class="nav-item" data-page="import-export">
+            <i class="fas fa-exchange-alt"></i>
+            <span>Import / Export</span>
+          </li>
+          <li class="nav-item" data-page="users">
+            <i class="fas fa-users-cog"></i>
+            <span>User Management</span>
+          </li>
+          <li class="nav-item" data-page="audit">
+            <i class="fas fa-history"></i>
+            <span>Audit Trail</span>
+          </li>
+        </ul>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="avatar">CY</div>
+            <div class="user-details">
+              <span class="user-name" id="current-user-name">Crystal Yao</span>
+              <span class="user-role" id="current-user-role">Admin</span>
+            </div>
+          </div>
+          <button class="btn-icon" onclick="logout()" title="Sign Out">
+            <i class="fas fa-sign-out-alt"></i>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main Content Area -->
+      <main id="content">
+        <!-- Top Bar -->
+        <header class="topbar">
+          <button class="btn-icon sidebar-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="topbar-right">
+            <div class="market-selector">
+              <select id="market-select" onchange="changeMarket(this.value)">
+                <option value="all">All Markets</option>
+                <option value="JP">Japan (JP)</option>
+                <option value="KR">South Korea (KR)</option>
+                <option value="TW">Taiwan (TW)</option>
+                <option value="HK">Hong Kong (HK)</option>
+                <option value="TH">Thailand (TH)</option>
+                <option value="SG-MY">Singapore-Malaysia</option>
+                <option value="VN">Vietnam (VN)</option>
+                <option value="ID">Indonesia (ID)</option>
+                <option value="PH">Philippines (PH)</option>
+              </select>
+            </div>
+            <select id="app-language" onchange="changeLanguage(this.value)" class="lang-select">
+              <option value="en">EN</option>
+              <option value="ja">JP</option>
+              <option value="ko">KR</option>
+              <option value="zh-tw">TW</option>
+              <option value="th">TH</option>
+              <option value="vi">VN</option>
+              <option value="id">ID</option>
+            </select>
+            <button class="btn-icon notification-btn" onclick="toggleNotifications()">
+              <i class="fas fa-bell"></i>
+              <span class="notif-dot"></span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Notification Panel -->
+        <div id="notification-panel" class="notification-panel">
+          <div class="notif-header">
+            <h3>Notifications</h3>
+            <button class="btn-text" onclick="markAllRead()">Mark all read</button>
+          </div>
+          <div class="notif-list">
+            <div class="notif-item unread">
+              <i class="fas fa-check-circle text-success"></i>
+              <div>
+                <p><strong>LI-2026-0042</strong> approved by Supply Chain KR</p>
+                <span class="notif-time">2 hours ago</span>
+              </div>
+            </div>
+            <div class="notif-item unread">
+              <i class="fas fa-times-circle text-danger"></i>
+              <div>
+                <p><strong>LI-2026-0038</strong> rejected — label position mismatch</p>
+                <span class="notif-time">4 hours ago</span>
+              </div>
+            </div>
+            <div class="notif-item unread">
+              <i class="fas fa-clock text-warning"></i>
+              <div>
+                <p>3 labelling instructions pending your approval</p>
+                <span class="notif-time">Today, 12:00 PM</span>
+              </div>
+            </div>
+            <div class="notif-item">
+              <i class="fas fa-upload text-info"></i>
+              <div>
+                <p>Bulk import completed: 156 instructions imported for TH market</p>
+                <span class="notif-time">Yesterday</span>
+              </div>
+            </div>
+            <div class="notif-item">
+              <i class="fas fa-user-plus text-info"></i>
+              <div>
+                <p>New external user registered: vendor_vn_01</p>
+                <span class="notif-time">2 days ago</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Page -->
+        <div id="page-dashboard" class="content-page active">
+          <div class="page-header">
+            <h1>Dashboard</h1>
+            <p class="page-subtitle">Overview of labelling instruction activities across APAC markets</p>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon bg-blue"><i class="fas fa-file-alt"></i></div>
+              <div class="stat-info">
+                <span class="stat-value">2,847</span>
+                <span class="stat-label">Total Instructions</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-yellow"><i class="fas fa-clock"></i></div>
+              <div class="stat-info">
+                <span class="stat-value">124</span>
+                <span class="stat-label">Pending Approval</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-green"><i class="fas fa-check-circle"></i></div>
+              <div class="stat-info">
+                <span class="stat-value">2,583</span>
+                <span class="stat-label">Completed</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon bg-red"><i class="fas fa-exclamation-triangle"></i></div>
+              <div class="stat-info">
+                <span class="stat-value">18</span>
+                <span class="stat-label">Rejected</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="dashboard-grid">
+            <div class="card">
+              <div class="card-header">
+                <h3>Instructions by Market</h3>
+              </div>
+              <div class="card-body">
+                <div class="chart-bars">
+                  <div class="bar-row">
+                    <span class="bar-label">JP</span>
+                    <div class="bar-container"><div class="bar" style="width:85%"><span>612</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">KR</span>
+                    <div class="bar-container"><div class="bar" style="width:72%"><span>518</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">TW</span>
+                    <div class="bar-container"><div class="bar" style="width:55%"><span>396</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">TH</span>
+                    <div class="bar-container"><div class="bar" style="width:48%"><span>345</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">HK</span>
+                    <div class="bar-container"><div class="bar" style="width:40%"><span>288</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">SG-MY</span>
+                    <div class="bar-container"><div class="bar" style="width:35%"><span>252</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">VN</span>
+                    <div class="bar-container"><div class="bar" style="width:28%"><span>198</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">ID</span>
+                    <div class="bar-container"><div class="bar" style="width:18%"><span>132</span></div></div>
+                  </div>
+                  <div class="bar-row">
+                    <span class="bar-label">PH</span>
+                    <div class="bar-container"><div class="bar" style="width:15%"><span>106</span></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header">
+                <h3>Status Breakdown</h3>
+              </div>
+              <div class="card-body">
+                <div class="status-donut">
+                  <svg viewBox="0 0 200 200" class="donut-chart">
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#e8ecf1" stroke-width="24"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#22c55e" stroke-width="24"
+                      stroke-dasharray="456 502" stroke-dashoffset="0" class="donut-segment"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#f59e0b" stroke-width="24"
+                      stroke-dasharray="62 502" stroke-dashoffset="-456" class="donut-segment"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#ef4444" stroke-width="24"
+                      stroke-dasharray="9 502" stroke-dashoffset="-518" class="donut-segment"/>
+                    <circle cx="100" cy="100" r="80" fill="none" stroke="#6366f1" stroke-width="24"
+                      stroke-dasharray="22 502" stroke-dashoffset="-527" class="donut-segment"/>
+                  </svg>
+                  <div class="donut-legend">
+                    <div class="legend-item"><span class="legend-dot bg-green"></span> Completed (2,583)</div>
+                    <div class="legend-item"><span class="legend-dot bg-yellow"></span> Pending (124)</div>
+                    <div class="legend-item"><span class="legend-dot bg-red"></span> Rejected (18)</div>
+                    <div class="legend-item"><span class="legend-dot bg-purple"></span> Drafted (122)</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card full-width">
+              <div class="card-header">
+                <h3>Recent Activity</h3>
+                <a href="#" class="btn-text" onclick="navigateTo('audit')">View All</a>
+              </div>
+              <div class="card-body">
+                <table class="data-table">
+                  <thead>
+                    <tr>
+                      <th>Record #</th>
+                      <th>Market</th>
+                      <th>Brand</th>
+                      <th>SKU</th>
+                      <th>Status</th>
+                      <th>Updated By</th>
+                      <th>Date</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><a href="#" onclick="viewInstruction('LI-2026-0047')">LI-2026-0047</a></td>
+                      <td>KR</td>
+                      <td>Dior</td>
+                      <td>F068920009</td>
+                      <td><span class="status-badge status-completed">Completed</span></td>
+                      <td>Kim Soo-jin</td>
+                      <td>2026-03-16</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" onclick="viewInstruction('LI-2026-0046')">LI-2026-0046</a></td>
+                      <td>JP</td>
+                      <td>Givenchy</td>
+                      <td>P056321004</td>
+                      <td><span class="status-badge status-pending">Waiting LI Validation</span></td>
+                      <td>Tanaka Yuki</td>
+                      <td>2026-03-16</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" onclick="viewInstruction('LI-2026-0045')">LI-2026-0045</a></td>
+                      <td>TH</td>
+                      <td>Fenty Beauty</td>
+                      <td>M078432001</td>
+                      <td><span class="status-badge status-rejected">Label Position Rejected</span></td>
+                      <td>Siriporn W.</td>
+                      <td>2026-03-15</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" onclick="viewInstruction('LI-2026-0044')">LI-2026-0044</a></td>
+                      <td>TW</td>
+                      <td>Benefit</td>
+                      <td>C091287003</td>
+                      <td><span class="status-badge status-validated">Position Validated</span></td>
+                      <td>Chen Wei-lin</td>
+                      <td>2026-03-15</td>
+                    </tr>
+                    <tr>
+                      <td><a href="#" onclick="viewInstruction('LI-2026-0043')">LI-2026-0043</a></td>
+                      <td>SG-MY</td>
+                      <td>Fresh</td>
+                      <td>S046718002</td>
+                      <td><span class="status-badge status-draft">Drafted</span></td>
+                      <td>Lim Mei Ting</td>
+                      <td>2026-03-14</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Labelling Instructions Page -->
+        <div id="page-instructions" class="content-page">
+          <div class="page-header">
+            <h1>Labelling Instructions</h1>
+            <div class="page-actions">
+              <button class="btn btn-outline" onclick="openBulkUpload()"><i class="fas fa-upload"></i> Bulk Upload</button>
+              <button class="btn btn-primary" onclick="openNewInstruction()"><i class="fas fa-plus"></i> New Instruction</button>
+            </div>
+          </div>
+
+          <!-- Filters -->
+          <div class="filters-bar">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search by SKU, Record #, or Description..." id="instruction-search" oninput="filterInstructions()">
+            </div>
+            <select id="filter-brand" onchange="filterInstructions()">
+              <option value="">All Brands</option>
+              <option>Dior</option>
+              <option>Givenchy</option>
+              <option>Fenty Beauty</option>
+              <option>Benefit</option>
+              <option>Fresh</option>
+              <option>Guerlain</option>
+              <option>Make Up For Ever</option>
+            </select>
+            <select id="filter-status" onchange="filterInstructions()">
+              <option value="">All Statuses</option>
+              <option value="drafted">Drafted</option>
+              <option value="waiting-position">Waiting Position Validation</option>
+              <option value="position-rejected">Position Rejected</option>
+              <option value="position-validated">Position Validated</option>
+              <option value="waiting-li">Waiting LI Validation</option>
+              <option value="li-rejected">LI Rejected</option>
+              <option value="completed">Completed</option>
+            </select>
+            <button class="btn btn-outline btn-sm" onclick="clearFilters()">Clear</button>
+          </div>
+
+          <!-- Instructions Table -->
+          <div class="card">
+            <div class="card-body no-padding">
+              <table class="data-table" id="instructions-table">
+                <thead>
+                  <tr>
+                    <th><input type="checkbox" id="select-all-instructions"></th>
+                    <th>Record #</th>
+                    <th>Market</th>
+                    <th>Brand</th>
+                    <th>SKU</th>
+                    <th>Description</th>
+                    <th>Control Point</th>
+                    <th>Status</th>
+                    <th>Updated</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="instructions-tbody"></tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span class="showing-text">Showing 1-10 of 2,847 instructions</span>
+              <div class="pagination">
+                <button class="btn-icon"><i class="fas fa-chevron-left"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span>...</span>
+                <button class="page-btn">285</button>
+                <button class="btn-icon"><i class="fas fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SKU Search Page -->
+        <div id="page-sku-search" class="content-page">
+          <div class="page-header">
+            <h1>SKU Search & Barcode Scan</h1>
+            <p class="page-subtitle">Find labelling instructions by scanning a barcode or entering a SKU number</p>
+          </div>
+
+          <div class="search-hero">
+            <div class="search-hero-inner">
+              <div class="search-tabs">
+                <button class="search-tab active" data-search="manual">
+                  <i class="fas fa-keyboard"></i> Enter SKU
+                </button>
+                <button class="search-tab" data-search="scan">
+                  <i class="fas fa-barcode"></i> Scan Barcode
+                </button>
+              </div>
+
+              <div id="manual-search" class="search-mode active">
+                <div class="sku-input-group">
+                  <input type="text" id="sku-input" placeholder="Enter SKU number (e.g., F068920009)" class="sku-input">
+                  <button class="btn btn-primary btn-lg" onclick="searchSKU()">
+                    <i class="fas fa-search"></i> Search
+                  </button>
+                </div>
+              </div>
+
+              <div id="scan-search" class="search-mode">
+                <div class="scan-area">
+                  <div class="scan-frame">
+                    <i class="fas fa-camera scan-icon"></i>
+                    <p>Position barcode within the frame</p>
+                    <button class="btn btn-outline" onclick="simulateScan()">
+                      <i class="fas fa-barcode"></i> Simulate Scan
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="sku-results" class="sku-results" style="display:none;">
+            <div class="card">
+              <div class="card-header">
+                <h3>Search Results for SKU: <span id="searched-sku"></span></h3>
+                <span class="result-count" id="result-count"></span>
+              </div>
+              <div class="card-body" id="sku-results-body"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Approvals Page -->
+        <div id="page-approvals" class="content-page">
+          <div class="page-header">
+            <h1>Approval Workflow</h1>
+            <p class="page-subtitle">Manage and process labelling instruction approvals</p>
+          </div>
+
+          <div class="approval-tabs">
+            <button class="approval-tab active" data-atab="pending-approvals">
+              Pending My Approval <span class="badge">5</span>
+            </button>
+            <button class="approval-tab" data-atab="my-requests">
+              My Requests <span class="badge bg-blue">12</span>
+            </button>
+            <button class="approval-tab" data-atab="all-approvals">
+              All Approvals
+            </button>
+          </div>
+
+          <div id="pending-approvals" class="approval-content active">
+            <div class="approval-list">
+              <div class="approval-card">
+                <div class="approval-header">
+                  <div>
+                    <h4>LI-2026-0046 — Label Position Validation</h4>
+                    <p class="approval-meta">Givenchy | JP | SKU: P056321004</p>
+                  </div>
+                  <span class="status-badge status-pending">Awaiting Validation</span>
+                </div>
+                <div class="approval-details">
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted by:</span>
+                    <span>Tanaka Yuki</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted:</span>
+                    <span>2026-03-16, 09:30 AM</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Control Point:</span>
+                    <span>First batch - Mar 2026</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Label AW:</span>
+                    <span class="aw-preview"><i class="fas fa-image"></i> AW-JP-2026-0321.pdf</span>
+                  </div>
+                </div>
+                <div class="approval-actions">
+                  <button class="btn btn-success" onclick="approveItem('LI-2026-0046')"><i class="fas fa-check"></i> Approve</button>
+                  <button class="btn btn-danger" onclick="rejectItem('LI-2026-0046')"><i class="fas fa-times"></i> Reject</button>
+                  <button class="btn btn-outline" onclick="reassignItem('LI-2026-0046')"><i class="fas fa-user-tag"></i> Reassign</button>
+                  <button class="btn btn-outline" onclick="viewInstruction('LI-2026-0046')"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+              </div>
+
+              <div class="approval-card">
+                <div class="approval-header">
+                  <div>
+                    <h4>LI-2026-0042 — Labelling Instruction Validation</h4>
+                    <p class="approval-meta">Dior | KR | SKU: F068920009</p>
+                  </div>
+                  <span class="status-badge status-pending">Awaiting Validation</span>
+                </div>
+                <div class="approval-details">
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted by:</span>
+                    <span>Kim Soo-jin</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted:</span>
+                    <span>2026-03-15, 02:15 PM</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Control Point:</span>
+                    <span>Effective date - Apr 2026</span>
+                  </div>
+                </div>
+                <div class="approval-actions">
+                  <button class="btn btn-success" onclick="approveItem('LI-2026-0042')"><i class="fas fa-check"></i> Approve</button>
+                  <button class="btn btn-danger" onclick="rejectItem('LI-2026-0042')"><i class="fas fa-times"></i> Reject</button>
+                  <button class="btn btn-outline" onclick="reassignItem('LI-2026-0042')"><i class="fas fa-user-tag"></i> Reassign</button>
+                  <button class="btn btn-outline" onclick="viewInstruction('LI-2026-0042')"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+              </div>
+
+              <div class="approval-card">
+                <div class="approval-header">
+                  <div>
+                    <h4>LI-2026-0039 — Label Position Validation</h4>
+                    <p class="approval-meta">Fenty Beauty | SG-MY | SKU: M078432001</p>
+                  </div>
+                  <span class="status-badge status-pending">Awaiting Validation</span>
+                </div>
+                <div class="approval-details">
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted by:</span>
+                    <span>Lim Mei Ting</span>
+                  </div>
+                  <div class="detail-row">
+                    <span class="detail-label">Submitted:</span>
+                    <span>2026-03-14, 11:00 AM</span>
+                  </div>
+                </div>
+                <div class="approval-actions">
+                  <button class="btn btn-success" onclick="approveItem('LI-2026-0039')"><i class="fas fa-check"></i> Approve</button>
+                  <button class="btn btn-danger" onclick="rejectItem('LI-2026-0039')"><i class="fas fa-times"></i> Reject</button>
+                  <button class="btn btn-outline" onclick="reassignItem('LI-2026-0039')"><i class="fas fa-user-tag"></i> Reassign</button>
+                  <button class="btn btn-outline" onclick="viewInstruction('LI-2026-0039')"><i class="fas fa-eye"></i> View Details</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="my-requests" class="approval-content"></div>
+          <div id="all-approvals" class="approval-content"></div>
+        </div>
+
+        <!-- Import/Export Page -->
+        <div id="page-import-export" class="content-page">
+          <div class="page-header">
+            <h1>Import / Export</h1>
+            <p class="page-subtitle">Bulk import labelling instructions or export data</p>
+          </div>
+
+          <div class="ie-grid">
+            <div class="card">
+              <div class="card-header"><h3><i class="fas fa-upload"></i> Import</h3></div>
+              <div class="card-body">
+                <div class="upload-zone" id="upload-zone">
+                  <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                  <p>Drag & drop files here, or click to browse</p>
+                  <span class="upload-hint">Supports CSV, Excel (.xlsx), PDF files</span>
+                  <input type="file" id="file-input" accept=".csv,.xlsx,.pdf" multiple style="display:none">
+                  <button class="btn btn-outline" onclick="document.getElementById('file-input').click()">Select Files</button>
+                </div>
+                <div class="import-options">
+                  <h4>Import Settings</h4>
+                  <div class="form-group">
+                    <label>Target Market</label>
+                    <select>
+                      <option>Select market...</option>
+                      <option>JP</option><option>KR</option><option>TW</option>
+                      <option>HK</option><option>TH</option><option>SG-MY</option>
+                      <option>VN</option><option>ID</option><option>PH</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Import Source</label>
+                    <select>
+                      <option>Local File</option>
+                      <option>SharePoint (Designated)</option>
+                    </select>
+                  </div>
+                  <div class="form-check">
+                    <input type="checkbox" id="overwrite-existing">
+                    <label for="overwrite-existing">Update existing records if SKU matches</label>
+                  </div>
+                  <button class="btn btn-primary"><i class="fas fa-upload"></i> Start Import</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-header"><h3><i class="fas fa-download"></i> Export</h3></div>
+              <div class="card-body">
+                <div class="export-options">
+                  <div class="form-group">
+                    <label>Export Scope</label>
+                    <select>
+                      <option>All Instructions</option>
+                      <option>Current Market Only</option>
+                      <option>Filtered Results</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Format</label>
+                    <div class="format-options">
+                      <label class="format-option selected">
+                        <input type="radio" name="export-format" value="csv" checked>
+                        <i class="fas fa-file-csv"></i> CSV
+                      </label>
+                      <label class="format-option">
+                        <input type="radio" name="export-format" value="xlsx">
+                        <i class="fas fa-file-excel"></i> Excel
+                      </label>
+                      <label class="format-option">
+                        <input type="radio" name="export-format" value="pdf">
+                        <i class="fas fa-file-pdf"></i> PDF
+                      </label>
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <label>Date Range</label>
+                    <div class="date-range">
+                      <input type="date" value="2026-01-01">
+                      <span>to</span>
+                      <input type="date" value="2026-03-16">
+                    </div>
+                  </div>
+                  <button class="btn btn-primary"><i class="fas fa-download"></i> Export Data</button>
+                </div>
+
+                <div class="export-section">
+                  <h4>SharePoint Sync</h4>
+                  <p class="text-muted">Export to designated SharePoint location</p>
+                  <div class="form-group">
+                    <label>SharePoint Path</label>
+                    <input type="text" value="/sites/LFCS-TILT/Shared Documents/Exports/" readonly class="input-readonly">
+                  </div>
+                  <button class="btn btn-outline"><i class="fas fa-sync"></i> Sync to SharePoint</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- User Management Page -->
+        <div id="page-users" class="content-page">
+          <div class="page-header">
+            <h1>User Management</h1>
+            <div class="page-actions">
+              <button class="btn btn-primary" onclick="openNewUser()"><i class="fas fa-user-plus"></i> Add User</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <div class="filters-inline">
+                <div class="search-box">
+                  <i class="fas fa-search"></i>
+                  <input type="text" placeholder="Search users...">
+                </div>
+                <select>
+                  <option>All Roles</option>
+                  <option>Admin</option>
+                  <option>Instruction Creator</option>
+                  <option>Approver</option>
+                  <option>Viewer</option>
+                </select>
+                <select>
+                  <option>All Types</option>
+                  <option>LVMH (SSO)</option>
+                  <option>External</option>
+                </select>
+              </div>
+            </div>
+            <div class="card-body no-padding">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>User</th>
+                    <th>Type</th>
+                    <th>Role(s)</th>
+                    <th>Team</th>
+                    <th>Market(s)</th>
+                    <th>Language</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">CY</div>
+                        <div><strong>Crystal Yao</strong><br><span class="text-muted">crystal.yao@lvmh.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-lvmh">LVMH SSO</span></td>
+                    <td>Admin, Creator, Approver</td>
+                    <td>Beauty Tech</td>
+                    <td>All Markets</td>
+                    <td>EN</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Disable"><i class="fas fa-ban"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">KS</div>
+                        <div><strong>Kim Soo-jin</strong><br><span class="text-muted">kim.soojin@lvmh.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-lvmh">LVMH SSO</span></td>
+                    <td>Creator, Approver</td>
+                    <td>RA</td>
+                    <td>KR</td>
+                    <td>KO</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Disable"><i class="fas fa-ban"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">TY</div>
+                        <div><strong>Tanaka Yuki</strong><br><span class="text-muted">tanaka.yuki@lvmh.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-lvmh">LVMH SSO</span></td>
+                    <td>Creator, Approver</td>
+                    <td>Brand</td>
+                    <td>JP</td>
+                    <td>JA</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Disable"><i class="fas fa-ban"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">SW</div>
+                        <div><strong>Siriporn W.</strong><br><span class="text-muted">siriporn.w@lvmh.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-lvmh">LVMH SSO</span></td>
+                    <td>Creator</td>
+                    <td>Labelling</td>
+                    <td>TH</td>
+                    <td>TH</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Disable"><i class="fas fa-ban"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">VN</div>
+                        <div><strong>vendor_vn_01</strong><br><span class="text-muted">vendor.vn@partner.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-ext">External</span></td>
+                    <td>Viewer</td>
+                    <td>Vendor</td>
+                    <td>VN</td>
+                    <td>VI</td>
+                    <td><span class="status-dot active"></span> Active</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Disable"><i class="fas fa-ban"></i></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <div class="user-cell">
+                        <div class="avatar avatar-sm">LP</div>
+                        <div><strong>label_printer_id</strong><br><span class="text-muted">printer@lbeauty-id.com</span></div>
+                      </div>
+                    </td>
+                    <td><span class="type-badge type-ext">External</span></td>
+                    <td>Viewer</td>
+                    <td>LBeauty</td>
+                    <td>ID</td>
+                    <td>ID</td>
+                    <td><span class="status-dot inactive"></span> Disabled</td>
+                    <td>
+                      <button class="btn-icon" title="Edit"><i class="fas fa-edit"></i></button>
+                      <button class="btn-icon" title="Enable"><i class="fas fa-check-circle"></i></button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- Audit Trail Page -->
+        <div id="page-audit" class="content-page">
+          <div class="page-header">
+            <h1>Audit Trail</h1>
+            <p class="page-subtitle">Full history of all changes, approvals, and system events</p>
+          </div>
+
+          <div class="filters-bar">
+            <div class="search-box">
+              <i class="fas fa-search"></i>
+              <input type="text" placeholder="Search audit logs...">
+            </div>
+            <select>
+              <option>All Actions</option>
+              <option>Created</option>
+              <option>Updated</option>
+              <option>Approved</option>
+              <option>Rejected</option>
+              <option>Deleted</option>
+              <option>Login</option>
+            </select>
+            <input type="date" value="2026-03-01">
+            <span>to</span>
+            <input type="date" value="2026-03-16">
+          </div>
+
+          <div class="card">
+            <div class="card-body no-padding">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Timestamp</th>
+                    <th>User</th>
+                    <th>Action</th>
+                    <th>Record</th>
+                    <th>Details</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>2026-03-16 14:32:05</td>
+                    <td>Kim Soo-jin</td>
+                    <td><span class="action-badge action-approve">Approved</span></td>
+                    <td>LI-2026-0047</td>
+                    <td>Labelling instruction validated and marked complete</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-16 09:30:12</td>
+                    <td>Tanaka Yuki</td>
+                    <td><span class="action-badge action-update">Updated</span></td>
+                    <td>LI-2026-0046</td>
+                    <td>Label AW image uploaded, submitted for position validation</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-15 16:45:33</td>
+                    <td>Crystal Yao</td>
+                    <td><span class="action-badge action-reject">Rejected</span></td>
+                    <td>LI-2026-0045</td>
+                    <td>Label position incorrect — side panel should be right, not left</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-15 11:20:07</td>
+                    <td>Chen Wei-lin</td>
+                    <td><span class="action-badge action-approve">Approved</span></td>
+                    <td>LI-2026-0044</td>
+                    <td>Label position validated for TW market</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-14 15:55:18</td>
+                    <td>Lim Mei Ting</td>
+                    <td><span class="action-badge action-create">Created</span></td>
+                    <td>LI-2026-0043</td>
+                    <td>New labelling instruction drafted for Fresh SG-MY</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-14 10:12:44</td>
+                    <td>System</td>
+                    <td><span class="action-badge action-import">Imported</span></td>
+                    <td>Bulk</td>
+                    <td>156 labelling instructions imported for TH market from CSV</td>
+                  </tr>
+                  <tr>
+                    <td>2026-03-13 09:00:00</td>
+                    <td>Crystal Yao</td>
+                    <td><span class="action-badge action-create">Created</span></td>
+                    <td>USR-EXT-012</td>
+                    <td>External user vendor_vn_01 created with Viewer role for VN market</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="table-footer">
+              <span class="showing-text">Showing 1-7 of 1,234 events</span>
+              <div class="pagination">
+                <button class="btn-icon"><i class="fas fa-chevron-left"></i></button>
+                <button class="page-btn active">1</button>
+                <button class="page-btn">2</button>
+                <button class="page-btn">3</button>
+                <span>...</span>
+                <button class="btn-icon"><i class="fas fa-chevron-right"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal: New / Edit Instruction -->
+    <div id="instruction-modal" class="modal">
+      <div class="modal-overlay" onclick="closeModal('instruction-modal')"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h2 id="modal-title">New Labelling Instruction</h2>
+          <button class="btn-icon" onclick="closeModal('instruction-modal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Record Number <span class="required">*</span></label>
+              <input type="text" id="li-record" value="LI-2026-0048" readonly class="input-readonly">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <span class="status-badge status-draft">Drafted</span>
+            </div>
+            <div class="form-group">
+              <label>Country <span class="required">*</span></label>
+              <select id="li-country">
+                <option>Japan</option><option>South Korea</option><option>Taiwan</option>
+                <option>Hong Kong</option><option>Thailand</option><option>Singapore</option>
+                <option>Malaysia</option><option>Vietnam</option><option>Indonesia</option><option>Philippines</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Market <span class="required">*</span></label>
+              <select id="li-market">
+                <option>JP</option><option>KR</option><option>TW</option><option>HK</option>
+                <option>TH</option><option>SG-MY</option><option>VN</option><option>ID</option><option>PH</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Brand <span class="required">*</span></label>
+              <select id="li-brand">
+                <option>Dior</option><option>Givenchy</option><option>Fenty Beauty</option>
+                <option>Benefit</option><option>Fresh</option><option>Guerlain</option><option>Make Up For Ever</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>SKU # <span class="required">*</span></label>
+              <input type="text" id="li-sku" placeholder="e.g., F068920009">
+            </div>
+            <div class="form-group full-width">
+              <label>Description</label>
+              <input type="text" id="li-description" placeholder="Product description">
+            </div>
+            <div class="form-group">
+              <label>OCD (Date)</label>
+              <input type="date" id="li-ocd">
+            </div>
+            <div class="form-group">
+              <label>Product Commercial Usage Code</label>
+              <input type="text" id="li-usage-code" placeholder="Usage code">
+            </div>
+            <div class="form-group">
+              <label>Control Point <span class="required">*</span></label>
+              <select id="li-control-point">
+                <option>First batch</option>
+                <option>Effective date</option>
+                <option>Expiry date</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Ingredient Listing Version <span class="required">*</span></label>
+              <input type="text" id="li-ingredient-ver" placeholder="e.g., v3.2">
+            </div>
+            <div class="form-group">
+              <label>Label AW ID <span class="required">*</span></label>
+              <input type="text" id="li-aw-id" placeholder="e.g., AW-JP-2026-0321">
+            </div>
+            <div class="form-group">
+              <label>Label AW Image <span class="required">*</span></label>
+              <div class="file-upload-inline">
+                <input type="file" accept="image/*,.pdf">
+                <button class="btn btn-outline btn-sm"><i class="fas fa-upload"></i> Upload</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Label Color <span class="required">*</span></label>
+              <input type="text" id="li-label-color" placeholder="e.g., White">
+            </div>
+            <div class="form-group">
+              <label>Label Font Color <span class="required">*</span></label>
+              <input type="text" id="li-font-color" placeholder="e.g., Black">
+            </div>
+            <div class="form-group">
+              <label>Label Size <span class="required">*</span></label>
+              <input type="text" id="li-size" placeholder="e.g., 45mm x 30mm">
+            </div>
+            <div class="form-group">
+              <label>Label AW Location <span class="required">*</span></label>
+              <div class="combo-input">
+                <select>
+                  <option>Back panel</option>
+                  <option>Front panel</option>
+                  <option>Side panel</option>
+                  <option>Bottom</option>
+                  <option>Cap</option>
+                  <option>Other</option>
+                </select>
+                <input type="text" placeholder="Additional detail (free text)">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Language <span class="required">*</span></label>
+              <select id="li-language">
+                <option>English</option><option>Japanese</option><option>Korean</option>
+                <option>Traditional Chinese</option><option>Thai</option><option>Vietnamese</option>
+                <option>Bahasa Indonesia</option><option>Bahasa Melayu</option><option>Filipino</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Labelled Product Picture</label>
+              <div class="file-upload-inline">
+                <input type="file" accept="image/*">
+                <button class="btn btn-outline btn-sm"><i class="fas fa-camera"></i> Upload Photo</button>
+              </div>
+              <span class="form-hint">Required for status completion</span>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('instruction-modal')">Cancel</button>
+          <button class="btn btn-secondary" onclick="saveInstruction()"><i class="fas fa-save"></i> Save Draft</button>
+          <button class="btn btn-primary" onclick="completeInstruction()"><i class="fas fa-check"></i> Complete & Submit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal: View Instruction Detail -->
+    <div id="view-modal" class="modal">
+      <div class="modal-overlay" onclick="closeModal('view-modal')"></div>
+      <div class="modal-content modal-lg">
+        <div class="modal-header">
+          <h2>Labelling Instruction Detail</h2>
+          <button class="btn-icon" onclick="closeModal('view-modal')"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="modal-body" id="view-modal-body">
+          <!-- Populated dynamically -->
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" onclick="closeModal('view-modal')">Close</button>
+          <button class="btn btn-outline" onclick="goBack()"><i class="fas fa-arrow-left"></i> Back</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">
+      <i class="fas fa-check-circle"></i>
+      <span id="toast-message"></span>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
