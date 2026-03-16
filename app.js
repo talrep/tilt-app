@@ -3,6 +3,37 @@
    Application Logic
    ============================================ */
 
+// ---- Password Gate ----
+const GATE_HASH = '5a7d4c8e'; // simple hash of the password
+function simpleHash(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) - h + str.charCodeAt(i)) | 0;
+  }
+  return (h >>> 0).toString(16);
+}
+
+function checkGatePassword() {
+  const input = document.getElementById('gate-password').value;
+  if (input === 'local2026!') {
+    sessionStorage.setItem('tilt-access', 'granted');
+    document.getElementById('password-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  } else {
+    document.getElementById('gate-error').style.display = 'block';
+    document.getElementById('gate-password').value = '';
+    document.getElementById('gate-password').focus();
+  }
+}
+
+// Check on load if already authenticated this session
+if (sessionStorage.getItem('tilt-access') === 'granted') {
+  document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('password-gate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+  });
+}
+
 // ---- Sample Data ----
 const sampleInstructions = [
   { id: 'LI-2026-0047', market: 'KR', brand: 'Dior', sku: 'F068920009', desc: 'Rouge Dior Lipstick #999', controlPoint: 'Effective date - Apr 2026', status: 'completed', statusText: 'Completed', updated: '2026-03-16', updatedBy: 'Kim Soo-jin', color: '#C41E3A', fontColor: 'White', size: '48mm x 32mm', location: 'Back panel', language: 'Korean', ingredientVer: 'v3.2', awId: 'AW-KR-2026-0188' },

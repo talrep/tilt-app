@@ -9,7 +9,23 @@
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-  <div id="app">
+  <!-- Password Gate -->
+  <div id="password-gate" class="password-gate">
+    <div class="password-box">
+      <div class="password-logo">TILT</div>
+      <p class="password-subtitle">APAC Market Labelling Instruction Tool</p>
+      <div class="password-form">
+        <label>Enter access password</label>
+        <input type="password" id="gate-password" placeholder="Password" onkeypress="if(event.key==='Enter')checkGatePassword()">
+        <button class="btn btn-primary btn-full" onclick="checkGatePassword()">
+          <i class="fas fa-lock"></i> Access
+        </button>
+        <p id="gate-error" class="gate-error" style="display:none;">Incorrect password. Please try again.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" style="display:none;">
     <!-- Login Page -->
     <div id="login-page" class="page active">
       <div class="login-container">
